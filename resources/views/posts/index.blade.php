@@ -1,6 +1,6 @@
 @extends('layouts')
 @section('content')
-<div class="col-md-6">
+<div class="col-md-6 offset-md-3">
     <table class="table table-striped">
         <thead>
             <tr>
