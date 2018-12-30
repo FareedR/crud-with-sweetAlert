@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Post;
+use App\Http\Requests\PostFormRequest;
 
 class PostController extends Controller
 {
@@ -13,7 +15,8 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
+        $posts = Post::all();
+        return view('posts.index',compact('posts'));
     }
 
     /**
@@ -23,7 +26,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        //
+        return view('posts.create');
     }
 
     /**
@@ -32,9 +35,17 @@ class PostController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store( PostFormRequest $request)
     {
-        //
+        $post = new Post ([
+            'title'=> $request->get('title'),
+            'body' => $request->get('body')
+        ]);
+
+        $post->save();
+        alert()->success('Success Message','Post has been added!')->autoClose(3000);
+        return redirect('/posts');
+
     }
 
     /**
@@ -56,7 +67,9 @@ class PostController extends Controller
      */
     public function edit($id)
     {
-        //
+        $post = Post::find($id);
+        
+        return view('posts.edit',compact('post'));
     }
 
     /**
@@ -66,9 +79,15 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update( PostFormRequest $request, $id)
     {
-        //
+        $post = Post::find($id);
+        $post->title = $request->get('title');
+        $post->body = $request->get('body');
+        $post->save();
+
+        alert()->success('Success Message','Post has been updated');
+        return redirect('/posts');
     }
 
     /**
@@ -79,6 +98,7 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $post = Post::find($id);
+        $post->delete();
     }
 }
